@@ -549,7 +549,12 @@ func ConvertClaudeRequestToAntigravity(modelName string, inputRawJSON []byte, _ 
 		out, _ = sjson.SetBytes(out, "request.generationConfig.topK", v.Num)
 	}
 	if v := gjson.GetBytes(rawJSON, "max_tokens"); v.Exists() && v.Type == gjson.Number {
-		out, _ = sjson.SetBytes(out, "request.generationConfig.maxOutputTokens", v.Num)
+		// 限制 maxOutputTokens 上限为 64000，防止 Cherry Studio 等客户端发送 128000 导致 400 错误
+		maxTokens := v.Num
+		if maxTokens > 64000 {
+			maxTokens = 64000
+		}
+		out, _ = sjson.SetBytes(out, "request.generationConfig.maxOutputTokens", maxTokens)
 	}
 
 	out = common.AttachDefaultSafetySettings(out, "request.safetySettings")
