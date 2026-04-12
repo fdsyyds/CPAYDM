@@ -108,6 +108,9 @@ func (h *OpenAIAPIHandler) ChatCompletions(c *gin.Context) {
 		return
 	}
 
+	// 清理 Cherry Studio 等客户端注入的 "[undefined]" 字符串值
+	rawJSON = handlers.DeepCleanUndefined(rawJSON)
+
 	// Check if the client requested a streaming response.
 	streamResult := gjson.GetBytes(rawJSON, "stream")
 	stream := streamResult.Type == gjson.True
@@ -162,6 +165,9 @@ func (h *OpenAIAPIHandler) Completions(c *gin.Context) {
 		})
 		return
 	}
+
+	// 清理 Cherry Studio 等客户端注入的 "[undefined]" 字符串值
+	rawJSON = handlers.DeepCleanUndefined(rawJSON)
 
 	// Check if the client requested a streaming response.
 	streamResult := gjson.GetBytes(rawJSON, "stream")

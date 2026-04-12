@@ -153,6 +153,9 @@ func (h *GeminiAPIHandler) GeminiHandler(c *gin.Context) {
 	method := action[1]
 	rawJSON, _ := c.GetRawData()
 
+	// 清理 Cherry Studio 等客户端注入的 "[undefined]" 字符串值
+	rawJSON = handlers.DeepCleanUndefined(rawJSON)
+
 	switch method {
 	case "generateContent":
 		h.handleGenerateContent(c, action[0], rawJSON)

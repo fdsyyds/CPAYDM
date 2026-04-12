@@ -77,6 +77,10 @@ func (h *GeminiCLIAPIHandler) CLIHandler(c *gin.Context) {
 	}
 
 	rawJSON, _ := c.GetRawData()
+
+	// 清理 Cherry Studio 等客户端注入的 "[undefined]" 字符串值
+	rawJSON = handlers.DeepCleanUndefined(rawJSON)
+
 	requestRawURI := c.Request.URL.Path
 
 	if requestRawURI == "/v1internal:generateContent" {

@@ -76,6 +76,9 @@ func (h *ClaudeCodeAPIHandler) ClaudeMessages(c *gin.Context) {
 		return
 	}
 
+	// 清理 Cherry Studio 等客户端注入的 "[undefined]" 字符串值
+	rawJSON = handlers.DeepCleanUndefined(rawJSON)
+
 	// Check if the client requested a streaming response.
 	streamResult := gjson.GetBytes(rawJSON, "stream")
 	if !streamResult.Exists() || streamResult.Type == gjson.False {
