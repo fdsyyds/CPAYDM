@@ -6,6 +6,9 @@ cli-proxy-api
 config.yaml
 .env
 
+# Local docs
+CHANGELOG.md
+
 # Generated content
 bin/*
 logs/*
